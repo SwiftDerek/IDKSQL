@@ -3,16 +3,23 @@
 <div class="content">
   <h1 style="text-align: center;">IDK SQL</h1>
   <br />
-  {% with messages = get_flashed_messages() %} {% if messages %}
-  <ul class="flashes">
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %} {% endwith %}
   <form action="/" method="POST" enctype="multipart/form-data">
     <input id="file" name="file" type="file" />
     <input type="submit" value="Upload File" />
   </form>
 </div>
+<br />
+{% with messages = get_flashed_messages() %} {% if messages %}
+<ul class="flashes">
+  {% for message in messages %}
+  <li>{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endwith %}
+<br />
+<form action="/" method="POST">
+  <input id="english" name="english" type="text" />
+  <button class="myButton"></button>
+</form>
+<br />
 {{ table|safe }} {% endblock %}
