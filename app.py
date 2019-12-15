@@ -4,8 +4,10 @@ from datetime import datetime
 import flask_excel as excel
 import pandas as pd
 import sqlite3
+from flask.helpers import flash
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F488z\n\xec]/'
 """ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
 db = SQLAlchemy(app) """
@@ -42,7 +44,13 @@ def index():
         tasks = Todo.query.order_by(Todo.date_created).all()
         return render_template('index.html', tasks=tasks) """
     if request.method == 'POST':
+        if 'file' not in request.files:
+            flash('No file')
+            return redirect(request.url)
         f = request.files['file']
+        if f.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
         data_xls = pd.read_excel(f)
         data_xls.to_sql(name='tbl', con=conn)
         return render_template('index.html', table=data_xls.to_html())
