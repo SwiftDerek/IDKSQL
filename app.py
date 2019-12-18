@@ -1,10 +1,9 @@
 from flask import Flask, render_template, url_for, request, redirect, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import flask_excel as excel
 import pandas as pd
 import sqlite3
 from flask.helpers import flash
+from ln2sql import Ln2sql
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F488z\n\xec]/'
@@ -12,7 +11,7 @@ app.secret_key = b'_5#y2L"F488z\n\xec]/'
 
 db = SQLAlchemy(app) """
 
-conn = sqlite3.connect(':memory:')
+conn = sqlite3.connect('sql.db', check_same_thread=False)
 cur = conn.cursor()
 
 
@@ -28,8 +27,6 @@ cur = conn.cursor()
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    conn = sqlite3.connect(':memory:')
-    cur = conn.cursor()
     """ if request.method == 'POST':
         task_content = request.form['content']
         new_task = Todo(content=task_content)
@@ -52,11 +49,35 @@ def index():
             flash('No selected file')
             return redirect(request.url)
         data_xls = pd.read_excel(f)
+        cur.execute('DROP TABLE IF EXISTS tbl')
         data_xls.to_sql(name='tbl', con=conn)
         return render_template('index.html', table=data_xls.to_html())
     else:
-        cur.execute('SELECT * FROM sqlite_temp_master')
-        return render_template('index.html', table=cur)
+        return render_template('index.html')
+
+
+@app.route('/sql', methods=['POST'])
+def sql():
+    if request.method == 'POST':
+        if request.form['english'] != '':
+
+            """ code doesn't work!! """
+
+            with open('sql.sql', 'w') as f:
+                for line in conn.iterdump():
+                    f.write('%s\n' % line)
+
+            parser = Ln2sql(
+                'sql.sql', 'lang_store\english.csv', 'output.json', u'thesaurus_store\\th_english.dat', u'stopwords\english.txt')
+
+            json_query = parser.get_query(request.form['english'])
+
+            query = parser.remove_json(json_query)
+
+            """ code doesn't work!! """
+
+            df = pd.read_sql_query("select * from tbl;", conn)
+            return render_template('index.html', table=df.to_html())
 
 
 if __name__ == "__main__":
