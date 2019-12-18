@@ -1,4 +1,4 @@
-from .constants import Color
+from constants import Color
 
 
 class Select():
@@ -53,9 +53,11 @@ class Select():
         select_string = ''
         for i in range(0, len(self.columns)):
             if i == (len(self.columns) - 1):
-                select_string = select_string + str(self.print_column(self.columns[i]))
+                select_string = select_string + \
+                    str(self.print_column(self.columns[i]))
             else:
-                select_string = select_string + str(self.print_column(self.columns[i])) + ', '
+                select_string = select_string + \
+                    str(self.print_column(self.columns[i])) + ', '
 
         return Color.BOLD + 'SELECT ' + Color.END + select_string
 
@@ -63,7 +65,8 @@ class Select():
         if len(self.columns) >= 1:
             if len(self.columns) == 1:
                 output.write('\t"select": {\n')
-                output.write('\t\t"column": "' + self.get_just_column_name(str(self.columns[0][0])) + '",\n')
+                output.write(
+                    '\t\t"column": "' + self.get_just_column_name(str(self.columns[0][0])) + '",\n')
                 output.write('\t\t"type": "' + str(self.columns[0][1]) + '"\n')
                 output.write('\t},\n')
             else:
@@ -73,12 +76,14 @@ class Select():
                     if i == (len(self.columns) - 1):
                         output.write(
                             '\t\t\t{ "column": "' + self.get_just_column_name(str(self.columns[i][0])) + '",\n')
-                        output.write('\t\t\t  "type": "' + str(self.columns[i][1]) + '"\n')
+                        output.write('\t\t\t  "type": "' +
+                                     str(self.columns[i][1]) + '"\n')
                         output.write('\t\t\t}\n')
                     else:
                         output.write(
                             '\t\t\t{ "column": "' + self.get_just_column_name(str(self.columns[i][0])) + '",\n')
-                        output.write('\t\t\t  "type": "' + str(self.columns[i][1]) + '"\n')
+                        output.write('\t\t\t  "type": "' +
+                                     str(self.columns[i][1]) + '"\n')
                         output.write('\t\t\t},\n')
                 output.write('\t\t]\n')
                 output.write('\t},\n')
@@ -257,7 +262,8 @@ class Where():
         if len(self.conditions) >= 1:
             for i in range(0, len(self.conditions)):
                 if i == 0:
-                    string += '\n' + Color.BOLD + 'WHERE' + Color.END + ' ' + str(self.conditions[i][1])
+                    string += '\n' + Color.BOLD + 'WHERE' + \
+                        Color.END + ' ' + str(self.conditions[i][1])
                 else:
                     string += '\n' + Color.BOLD + str(self.conditions[i][0]) + Color.END + ' ' + str(
                         self.conditions[i][1])
@@ -281,7 +287,8 @@ class Where():
                 output.write('\t\t"conditions": [\n')
                 for i in range(0, len(self.conditions)):
                     if i != 0:
-                        output.write('\t\t\t{\n\t\t\t  "operator": "' + str(self.conditions[i][0]) + '"\n\t\t\t},\n')
+                        output.write(
+                            '\t\t\t{\n\t\t\t  "operator": "' + str(self.conditions[i][0]) + '"\n\t\t\t},\n')
                     self.conditions[i][1].print_json(output)
                     if i != (len(self.conditions) - 1):
                         output.write(',')
@@ -323,7 +330,8 @@ class GroupBy():
     def print_json(self, output):
         if self.column is not None:
             output.write('\t"group_by": {\n')
-            output.write('\t\t"column": "' + self.get_just_column_name(str(self.column)) + '"\n')
+            output.write('\t\t"column": "' +
+                         self.get_just_column_name(str(self.column)) + '"\n')
             output.write('\t},\n')
         else:
             output.write('\t"group_by": {\n')
@@ -348,9 +356,11 @@ class OrderBy():
             string = Color.BOLD + 'ORDER BY ' + Color.END
             for i in range(0, len(self.columns)):
                 if i == (len(self.columns) - 1):
-                    string += self.columns[i][0] + ' ' + Color.BOLD + self.columns[i][1] + Color.END
+                    string += self.columns[i][0] + ' ' + \
+                        Color.BOLD + self.columns[i][1] + Color.END
                 else:
-                    string += self.columns[i][0] + ' ' + Color.BOLD + self.columns[i][1] + Color.END + ', '
+                    string += self.columns[i][0] + ' ' + Color.BOLD + \
+                        self.columns[i][1] + Color.END + ', '
             return '\n' + string
         else:
             return ''
@@ -359,20 +369,26 @@ class OrderBy():
         if len(self.columns) >= 1:
             if len(self.columns) == 1:
                 output.write('\t"select": {\n')
-                output.write('\t\t"column": "' + str(self.columns[0][0]) + '",\n')
-                output.write('\t\t"order": "' + str(self.columns[0][1]) + '"\n')
+                output.write('\t\t"column": "' +
+                             str(self.columns[0][0]) + '",\n')
+                output.write('\t\t"order": "' +
+                             str(self.columns[0][1]) + '"\n')
                 output.write('\t},\n')
             else:
                 output.write('\t"select": {\n')
                 output.write('\t\t"columns": [\n')
                 for i in range(0, len(self.columns)):
                     if i == (len(self.columns) - 1):
-                        output.write('\t\t\t{ "column": "' + str(self.columns[i][0]) + '",\n')
-                        output.write('\t\t\t  "order": "' + str(self.columns[i][1]) + '"\n')
+                        output.write('\t\t\t{ "column": "' +
+                                     str(self.columns[i][0]) + '",\n')
+                        output.write('\t\t\t  "order": "' +
+                                     str(self.columns[i][1]) + '"\n')
                         output.write('\t\t\t}\n')
                     else:
-                        output.write('\t\t\t{ "column": "' + str(self.columns[i][0]) + '",\n')
-                        output.write('\t\t\t  "order": "' + str(self.columns[i][1]) + '"\n')
+                        output.write('\t\t\t{ "column": "' +
+                                     str(self.columns[i][0]) + '",\n')
+                        output.write('\t\t\t  "order": "' +
+                                     str(self.columns[i][1]) + '"\n')
                         output.write('\t\t\t},\n')
                 output.write('\t\t]\n')
                 output.write('\t},\n')
